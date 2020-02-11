@@ -1,0 +1,59 @@
+﻿#-1 Entra no Prompt de comando como administador
+  win 7 = Executar: digita CMD
+  win 10 = Pesquisa: digita CMD
+
+#-2 Cria uma Pasta e Entra
+  criar = md nomepasta 
+  entrar = cd nomepasta  
+
+#-3 Cria uma Virtualenv na pasta criada
+  python -m venv nome_da_virtualenv (env)
+
+#-4 Abre a pasta Nome_da_virtualenv
+  cd nome_da_virtualenv\Scripts (env\Scripts)
+  
+#-5 Ativa a Virtualenv
+  activate
+     Obs:Volte para pasta raiz
+
+#-6 Inicialize o git 
+  git init
+
+#-7 Crie o arquivo gitignore e coloque o nome da virtualenv
+  .gitignore(env)
+  
+
+#-8 Atualize o pip   
+  python -m pip install --upgrade pip
+  pip install --upgrade setuptools
+  python -m pip install -U pylint
+  
+#-9 Instale o Django
+  pip install Django
+
+#-10 Cria o projeto Django usando o espaço e ponto para nao criar subprojeto com mesmo nome
+  django-admin startproject nome_do_projeto .
+
+#-11 Cria uma App dentro do projeto Django
+  django-admin startapp nome_da _app 
+  
+#-12 Instale as Dependencias
+  pip freeze
+  pip freeze > requirements.txt
+  python manage.py collectstatic
+  pip install -r requirements.txt  
+  
+#-13 Gere um .env local
+  python contrib/env_gen.py  
+  
+#-14 Corrige erro no debug do banco
+  python manage.py migrate --run-syncdb
+  python manage.py makemigrations
+
+
+#-15 instale o ajax select
+  pip install django-ajax-selects
+  
+#-16 instale o Reportlab
+  pip install rlextra -i https://www.reportlab.com/pypi/  
+  pip install some-package.whl
