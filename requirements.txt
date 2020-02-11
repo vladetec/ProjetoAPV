@@ -1,4 +1,4 @@
-Django==3.0
+Django>=3.0.3
 django-material-admin==1.6.10
 djangorestframework==3.11.0
 django-viewflow==1.6.0
