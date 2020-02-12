@@ -6,7 +6,6 @@ import re
 from django.db import models
 from django.utils import timezone
 from decimal import Decimal
-from django.urls import reverse_lazy
 
 TIPO_TELEFONE = [
     ('FIX', "Fixo"),
@@ -102,7 +101,6 @@ MOVIMENTO = (
     ('s', 'saida'),
 )
 
-
 class TimeStampedModel(models.Model):
     created = models.DateTimeField(
         'criado em',
@@ -117,7 +115,6 @@ class TimeStampedModel(models.Model):
 
     class Meta:
         abstract = True
-		
 
 class Pessoa(models.Model):
     # Dados
@@ -330,56 +327,34 @@ class Email(models.Model):
     def __unicode__(self):
         s = u'%s' % (self.email)
         return s
-		
-		
-class Cobranca(TimeStampedModel):
-    funcionario = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
-    codigo = models.PositiveIntegerField('código', null=True, blank=True)
+
+
+
+"""class Cobranca(TimeStampedModel):
+    doador = models.ForeignKey(Doador, on_delete=models.CASCADE, blank=True)
+    codigo_barras = models.PositiveIntegerField('código_barras', null=True, blank=True)
     movimento = models.CharField(max_length=1, choices=MOVIMENTO, blank=True)
 
     class Meta:
         ordering = ('-created',)
 
     def __str__(self):
-        if self.codigo:
-            return '{} - {} - {}'.format(self.pk, self.codigo, self.created.strftime('%d-%m-%Y'))
+        if self.nf:
+            return '{} - {} - {}'.format(self.pk, self.nf, self.created.strftime('%d-%m-%Y'))
         return '{} --- {}'.format(self.pk, self.created.strftime('%d-%m-%Y'))
 
-    def codigo_formated(self):
-        if self.codigo:
-            return str(self.codigo).zfill(3)
+    def nf_formated(self):
+        if self.nf:
+            return str(self.nf).zfill(3)
         return '---'
-		
-"""		
-class CobrancaEntrada(Cobranca):
-    objects = CobrancaEntradaManager()
 
-    class Meta:
-        proxy = True
-        verbose_name = 'cobranca entrada'
-        verbose_name_plural = 'cobrancas entrada'
-
-
-class CobrancaSaida(Cobranca):
-
-    objects = CobrancaSaidaManager()
-
-    class Meta:
-        proxy = True
-        verbose_name = 'cobranca saída'
-        verbose_name_plural = 'cobrancas saída'
-
-		
-"""		
-class CobrancaItens(models.Model):
-    # Dados
-    cobranca = models.ForeignKey(
-	    Cobranca,
-		on_delete=models.CASCADE,
-		related_name='cobrancas'
-		)
+"""
+class Cobranca(models.Model):
+    # Dados	
+    codigo_barras = models.CharField(
+        max_length=8, null=True, blank=True)
     valor = models.DecimalField(
-	    max_digits=7, decimal_places=2, default=Decimal('0.00'), null=True, blank=True)
+        max_digits=7, decimal_places=2, default=Decimal('0.00'), null=True, blank=True)
 	
 	#Doador
     doador = models.ForeignKey(
@@ -395,26 +370,25 @@ class CobrancaItens(models.Model):
         max_length=1, choices=TIPO_RECIBO, default='1')
 		
 	# Sobre o objeto
-    #criado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    #data_criacao = models.DateTimeField(editable=False, null=True, blank=True)
-    #data_edicao = models.DateTimeField(null=True, blank=True )
+    criado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    data_criacao = models.DateTimeField(editable=False, null=True, blank=True)
+    data_edicao = models.DateTimeField(null=True, blank=True )
 
     
 
     class Meta:
-        verbose_name = "CobrancaItens"
-        db_table = 'cobranca_iten'	
-        verbose_name_plural = "Cobrancas_itens"
         ordering = ('pk',)
+        verbose_name = "Cobranca"
+        db_table = 'cobranca'	
+        verbose_name_plural = "Cobrancas"
+
 
     def __str__(self):
-        return '{} - {} - {}'.format(self.pk, self.cobranca.pk, self.doador.nome)
+        s = u'%s' % (self.codigo_barras+ '-' + self.doador.nome)
+        return s
+        #return '{} - {} - {}'.format(self.pk, self.codigo_barras, self.doador.nome)
 
-
-    #def __str__(self):
-        #s = u'%s' % (self.codigo_barras+ '-' + self.doador.nome)
-        #return s
-
-    #def __unicode__(self):
-        #s = u'%s' % (self.codigo_barras+ '-' + self.doador.nome)
-        #return s
+    def __unicode__(self):
+        s = u'%s' % (self.codigo_barras+ '-' + self.doador.nome)
+        return s
+        #return '{} - {} - {}'.format(self.pk, self.codigo_barras, self.doador.nome)

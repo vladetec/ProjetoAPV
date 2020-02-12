@@ -1,0 +1,31 @@
+{% extends "base_initial.html" %}
+
+{% load static from staticfiles %}
+
+{% block style %}
+  <!-- Custom CSS -->
+  <link href="{% static "css/rgscale.css" %}" rel="stylesheet">
+{% endblock style %}
+
+{% block nocontent %}
+
+    <!-- Intro Header -->
+    <header class="intro">
+        <div class="intro-body">
+            <div class="container">
+                <div class="row">
+                    <div>
+                        <h3>Bem vindo ao controle de orçamentos!</h3>
+                        <p>Com ele você pode gerenciar seus clientes e obras e acompanhar o status dos seus orçamentos.</p>
+                        <a href="{% url 'core:dashboard' %}">
+                            <button class="btn btn-lg btn-dark-blue">Faça um teste gratuito</button>
+                        </a>
+                        <p><small>Usuário: admin - Senha: admin</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+{% endblock nocontent %}
