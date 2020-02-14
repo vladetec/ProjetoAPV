@@ -7,4 +7,5 @@ app_name = 'apps'
 
 urlpatterns = [
     path('', v.index, name='index'),
+	path('doador/pdf/', v.doador_pdf, name='pdf'),
 ]

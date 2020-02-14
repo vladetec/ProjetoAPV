@@ -1,0 +1,48 @@
+{% load static %}
+<html>
+<head>
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg .tg-ve35{border-color:#c0c0c0;text-align:left;vertical-align:middle}
+.tg .tg-wo29{border-color:#c0c0c0;text-align:left;vertical-align:top}
+</style>
+</head>
+
+<h3> Doador </h3>
+
+{% for p in doador  %}
+<p> {{ p.created }} </p>
+
+
+<table class="tg">
+  <tr>
+    <th class="tg-ve35">nome</th>
+    <th class="tg-wo29">{{ p.nome }}</th>
+  </tr>
+
+  <tr>
+    <th class="tg-ve35">endereco_padrao</th>
+    <th class="tg-wo29">{{ p.endereco_padrao }}</th>
+  </tr>
+  <tr>
+    <td class="tg-wo29">telefone_padrao</td>
+    <td class="tg-wo29">{{ p.telefone_padrao }}</td>
+  </tr>
+  <tr>
+    <td class="tg-wo29">email_padrao</td>
+    <td class="tg-wo29">{{ p.email_padrao}}</td>
+  </tr>
+  <tr>
+    <td class="tg-wo29">lista</td>
+    <td class="tg-wo29">{{ p.lista}} min</td>
+  </tr>
+</table>
+</div>
+
+{% endfor %}
+
+  </div>
+</div>
+</html>
