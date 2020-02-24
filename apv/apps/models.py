@@ -2,6 +2,7 @@
 
 from __future__ import unicode_literals
 from django.contrib.auth.models import User
+from django.template.defaultfilters import slugify
 import re
 from django.db import models
 from django.utils import timezone
@@ -248,7 +249,6 @@ class Endereco(models.Model):
     bairro = models.CharField(max_length=64, null=True, blank=True)
     complemento = models.CharField(max_length=64, null=True, blank=True)
     municipio = models.CharField(max_length=64, null=True, blank=True)
-    cmun = models.CharField(max_length=9, null=True, blank=True)
     cep = models.CharField(max_length=16, null=True, blank=True)
     uf = models.CharField(max_length=3, null=True,
                           blank=True, choices=UF_SIGLA)
@@ -306,7 +306,7 @@ class Telefone(models.Model):
 class Email(models.Model):
     #pessoa_email = models.ForeignKey(
         #Pessoa, related_name="email", on_delete=models.CASCADE)
-    email = models.CharField(max_length=255)
+    email = models.EmailField(max_length=200)
 
     class Meta:
         db_table = 'email'
@@ -351,8 +351,8 @@ class Email(models.Model):
 """
 class Cobranca(models.Model):
     # Dados	
-    codigo_barras = models.CharField(
-        max_length=8, null=True, blank=True)
+    #codigo_barras = models.SlugField(blank=True)
+    #codigo_barras = models.CharField(max_length=8, null=True, blank=True)
     valor = models.DecimalField(
         max_digits=7, decimal_places=2, default=Decimal('0.00'), null=True, blank=True)
 	
@@ -384,11 +384,22 @@ class Cobranca(models.Model):
 
 
     def __str__(self):
-        s = u'%s' % (self.codigo_barras+ '-' + self.doador.nome)
+        s = u'%s' % (str(self.pk)+ '-' + self.doador.nome)
         return s
         #return '{} - {} - {}'.format(self.pk, self.codigo_barras, self.doador.nome)
 
     def __unicode__(self):
-        s = u'%s' % (self.codigo_barras+ '-' + self.doador.nome)
+        s = u'%s' % (self.pk+ '-' + self.doador.nome)
         return s
         #return '{} - {} - {}'.format(self.pk, self.codigo_barras, self.doador.nome)
+		
+    """
+	def save(self, *args, **kwargs):
+        
+        self.codigo_barras = '%s,%i' % (slugify (self.doador.id), self.id)
+        super(Cobranca, self).save(*args, **kwargs)	
+	"""
+
+
+
+	

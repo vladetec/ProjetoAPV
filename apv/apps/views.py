@@ -1,10 +1,17 @@
 from django.shortcuts import render
-
+from .forms import DoadorForm, EntregadorForm, OperadorForm, CobrancaForm
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 #from weasyprint import HTML
 import tempfile
 
+def doadorview(request):
+    form_doador = DoadorForm()
+
+    context = {
+        'form_doador': form_doador,
+        }
+    return render(request, 'doador_list.html', context)
 
 def index(request):
     return render(request, 'index.html')

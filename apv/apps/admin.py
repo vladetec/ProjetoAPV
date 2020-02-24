@@ -65,9 +65,11 @@ admin.site.register(Email)
 #admin.site.register(Cobranca)
 @admin.register(Cobranca)
 class CobrancaAdmin(admin.ModelAdmin):
+    #prepopulated_fields = {"codigo_barras": ('doador.id',)}
     list_display = (
-        'codigo_barras', 'doador', 'valor', 
+        'id', 'doador', 'valor', 
         'tipo', 'operador', 'entregador',
         )
-    search_fields = ('doador',)
+	#prepopulated_fields = {"codigo_barras": ('doador.id',)}	
+    search_fields = ('doador', 'id',)
     list_filter = ('tipo', 'operador', 'entregador',)
