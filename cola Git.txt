@@ -1,31 +1,29 @@
 
 git --version
-git clone https://github.com/SirJulian/agorinhaservicos.git vlade
-git config --global user.email "vladetec@gmail.com"
-git config --global user.name "vladetec"
+git clone 
+git config --global user.email "nome@gmail.com"
+git config --global user.name "nome"
 git config --list
 git log
 git log --decorate
 git status
 
 
-git clone https://github.com/SirJulian/agorinhaservicos.git vlade
 git init
 git add .
 git commit -m "primeira versao"
 git status
 git push
 
-git remote add origin git@github.com:SirJulian/agorinhaservicos.git
-git remote add origin git@github.com:vladetec/loginlaranjeira.git
+git remote add origin git@github.com:Nome/Repositorio.git
 git remote
 git remote -v
-git remote add origin https://github.com/vladetec/loginlaranjeira.git
+git remote add origin https://github.com/nome/repositorio.git
 git push -u origin master
 
-git remote add -f origin https://github.com/vladetec/loginlaranjeira.git
-git remote add -f origin git@github.com:SirJulian/agorinhaservicos.git
-git remote add origin https://github.com/SirJulian/Laranjeiras.git
+git remote add -f origin https://github.com/nome/repositorio.git
+git remote add -f origin git@github.com:Nome/Repositorio.git
+git remote add origin https://github.com/nome/repositorio.git
 git status
 
 git branch
@@ -39,7 +37,7 @@ git push --help
 git update
 
 ssh-keygen
-ssh-keygen -t rsa -b 4096 -C "vladetec@gmail.com"
+ssh-keygen -t rsa -b 4096 -C "nome@gmail.com"
 ls -al ~/.ssh
 ssh -T git@github.com
 ssh -vT git@github.com
