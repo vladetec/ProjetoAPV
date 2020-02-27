@@ -1,9 +1,72 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
+
 {% block title %}Doadores Lista {% endblock title %}
 {% block content %}
+<div class="container bg-white shadow-lg rounded py-2">
+  <div class="row">
+        <div class="col-2">
+            <form action="" method="POST">
+                
+                {{ form_doador|crispy}}
+                <button type="submit" name="submitbtn2" class="btn btn-primary w-100 shadow-sm mt-3"><i class="far fa-paper-plane pr-3"></i>Send</button>
+            </form>
+        </div>
+        <div class="col-10">
+            <div style="overflow-y:scroll; height:85vh" class="w-100 bg-light rounded border">
+                <table class="table">
+                    <thead class="thead-light">
+                        <tr class="text-center">
+                            <th scope="col">Id:</th>
+                            <th scope="col">Nome:</th>
+                            <th scope="col">PF/PJ:</th>
+                            <th scope="col">End:</th>
+                            <th scope="col">Fone:</th>
+                            <th scope="col">Email@:</th>
+                            <!--<th scope="col">Criador:</th>
+                            <th scope="col">Data-Criação</th>
+                            <th scope="col">Data-Edição</th>-->
+                            <th scope="col">Listagem</th>
+                            <th scope="col">Edit</th>
+                            <th scope="col">Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for obj in object_list %}
+                            <tr class="text-center">
+                                <td>{{obj.id}}</td>
+                                <td>{{obj.nome}}</td>
+                                <td>{{obj.tipo_pessoa}}</td>
+                                <td>{{obj.endereco_padrao}}</td>
+                                <td>{{obj.telefone_padrao}}</td>
+                                <td>{{obj.email_padrao}}</td>
+                                <td>{{obj.criado_por}}</td>
+                                <td>{{obj.data_criacao}}</td>
+                                <td>{{obj.data_edicao}}</td>
+                                <td>{{obj.lista}}</td>
+                                <td>
+                                    {% if obj.problemreported_set.all %}
+                                        <div class="badge badge-danger">P</div>
+                                    {% endif %}
+                                </td>
 
+                                <td class="fit">
+                                    <button class="btn btn-warning open-modal" data-toggle="modal" data-target="#problemModal" data-url={{obj.id}}><i class="fas fa-exclamation-triangle"></i></button>
+                                </td>
+                                <td class="fit">
+                                    <a href="#"><button class="btn btn-info"><i class="far fa-edit"></i></button></a>
+                                </td>
+                                <td class="fit">
+                                    <a href="#"><button class="btn btn-danger"><i class="fas fa-trash-alt"></i></button></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-  {{ form_doador.as_p}}
- 
+  </div>
+</div> 
 
 {% endblock content %}

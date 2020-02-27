@@ -1,15 +1,19 @@
 from django.shortcuts import render
 from .forms import DoadorForm, EntregadorForm, OperadorForm, CobrancaForm
+from .models import Doador
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 #from weasyprint import HTML
 import tempfile
 
-def doadorview(request):
+def doadorview(request,):
     form_doador = DoadorForm()
+    #queryset = Doador.objects.filter(nome=nome)
+    queryset = Doador.objects.all
 
     context = {
         'form_doador': form_doador,
+        'object_list': queryset,
         }
     return render(request, 'doador_list.html', context)
 

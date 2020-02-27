@@ -3,6 +3,8 @@
 from __future__ import unicode_literals
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
+from django.urls import reverse_lazy
+from django.utils.formats import number_format
 import re
 from django.db import models
 from django.utils import timezone
@@ -132,8 +134,8 @@ class Pessoa(models.Model):
 
     # Sobre o objeto
     criado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    data_criacao = models.DateTimeField(editable=False)
-    data_edicao = models.DateTimeField()
+    data_criacao = models.DateTimeField('criado em', auto_now_add=True, auto_now=False, editable=False)
+    data_edicao = models.DateTimeField('modificado em', auto_now_add=False, auto_now=True)
 
     def save(self, *args, **kwargs):
         # Atualizar datas criacao edicao
@@ -227,18 +229,71 @@ class Doador(Pessoa):
         db_table = 'doador'
         verbose_name = "Doador"
         verbose_name_plural = "Doadores"
+		
+	# clica no doador e retorna os detalhes dela
+    def pega_doador_url(self):
+        return "/doador/%i" % self.id
+
+    # clica em doaçao e retorna as doaçoes do doador
+    def pega_doacao_doador_url(self):
+        return "/doacao/?doador=%i" % self.id
+
+    # doaçao por doador
+    def pega_doacao_count(self):
+        return self.doador_doacao.count()	
 
 class Operador(Pessoa):
+    ativo = models.BooleanField('ativo', default=True)
+    comissionado = models.BooleanField('comissionado', default=True)
+    comissao = models.DecimalField(
+        'comissão', max_digits=6, decimal_places=2, default=0.01, blank=True)
     class Meta:
         db_table = 'operador'
         verbose_name = "Operador"
         verbose_name_plural = "operadores"
+		
+    # clica no operador e retorna os detalhes dela
+    def pega_operador_url(self):
+        return "/operador/%i" % self.id
 
+    # clica em doaçao e retorna as doaçoes do operador
+    def pega_doacao_operador_url(self):
+        return "/doacao/?operador=%i" % self.id
+
+    # doaçao por operador
+    def pega_doacao_count(self):
+        return self.operador_doacao.count()
+	
+    # comissão operador	
+    def pega_comissao(self):
+        return "%s" % number_format(self.commissao * 100, 0)
+
+		
 class Entregador(Pessoa):
+    ativo = models.BooleanField('ativo', default=True)
+    comissionado = models.BooleanField('comissionado', default=True)
+    comissao = models.DecimalField(
+        'comissão', max_digits=6, decimal_places=2, default=0.01, blank=True)
     class Meta:
         db_table = 'entregador'
         verbose_name = "Entregador"
         verbose_name_plural = "Entregadores"
+	
+	# clica no entregador retorna os detalhes dela
+    def pega_entregador_url(self):
+        return "/operador/%i" % self.id
+
+    # clica em doaçao e retorna as doaçoes do entregador
+    def pega_doacao_operador_url(self):
+        return "/doacao/?entregador=%i" % self.id
+
+    # doaçao por entregador
+    def pega_doacao_count(self):
+        return self.entregador_doacao.count()
+	
+    # comissão entregador	
+    def pega_comissao(self):
+        return "%s" % number_format(self.commissao * 100, 0)
 
 
 class Endereco(models.Model):
@@ -351,29 +406,24 @@ class Email(models.Model):
 """
 class Cobranca(models.Model):
     # Dados	
-    #codigo_barras = models.SlugField(blank=True)
-    #codigo_barras = models.CharField(max_length=8, null=True, blank=True)
-    valor = models.DecimalField(
-        max_digits=7, decimal_places=2, default=Decimal('0.00'), null=True, blank=True)
-	
-	#Doador
+    #Doador
     doador = models.ForeignKey(
         'apps.Doador', related_name="cobranca_doador", on_delete=models.CASCADE, blank=True, null=True)
-    
-	# Operador
+    # Operador
     operador = models.ForeignKey(
         'apps.Operador', related_name="cobranca_operador", on_delete=models.CASCADE, blank=True, null=True)
 	# Entregador
     entregador = models.ForeignKey(
         'apps.Entregador', related_name="cobranca_entregador", on_delete=models.CASCADE, blank=True, null=True)
+    valor_cobranca = models.DecimalField(
+	    max_digits=7, decimal_places=2, default=Decimal('0.00'), null=True, blank=True)	
     tipo = models.CharField(
         max_length=1, choices=TIPO_RECIBO, default='1')
-		
-	# Sobre o objeto
+	
+    # Sobre o objeto
     criado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    data_criacao = models.DateTimeField(editable=False, null=True, blank=True)
-    data_edicao = models.DateTimeField(null=True, blank=True )
-
+    data_criacao = models.DateTimeField('criado em', auto_now_add=True, auto_now=False, editable=False)
+    data_edicao = models.DateTimeField('modificado em', auto_now_add=False, auto_now=True)
     
 
     class Meta:
@@ -382,24 +432,19 @@ class Cobranca(models.Model):
         db_table = 'cobranca'	
         verbose_name_plural = "Cobrancas"
 
-
     def __str__(self):
-        s = u'%s' % (str(self.pk)+ '-' + self.doador.nome)
-        return s
-        #return '{} - {} - {}'.format(self.pk, self.codigo_barras, self.doador.nome)
+        return "%03d" % self.id + "/%s" % self.data_criacao.strftime('%y')
+    codigo = property(__str__)
+	
+    def get_detalhe(self):
+        return "/cobranca/%i" % self.id
 
-    def __unicode__(self):
-        s = u'%s' % (self.pk+ '-' + self.doador.nome)
-        return s
-        #return '{} - {} - {}'.format(self.pk, self.codigo_barras, self.doador.nome)
-		
-    """
-	def save(self, *args, **kwargs):
-        
-        self.codigo_barras = '%s,%i' % (slugify (self.doador.id), self.id)
-        super(Cobranca, self).save(*args, **kwargs)	
-	"""
+    def valor_cobranca_formated(self):
+        return "R$ %s" % number_format(self.valor_cobranca, 2)
+    
 
 
+
+    
 
 	
