@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .forms import DoadorForm, EntregadorForm, OperadorForm, CobrancaForm
 from .models import Doador
@@ -16,7 +17,7 @@ def doadorview(request,):
         'object_list': queryset,
         }
     return render(request, 'doador_list.html', context)
-
+@login_required
 def index(request):
     return render(request, 'index.html')
 	
